@@ -74,7 +74,7 @@ pub async fn admins(ctx: &Context, chat_id: i64, user_id: i64) -> Vec<Administra
             .api
             .send_message(SendMessage::new(
                 user_id,
-                "Error! You must add this bot as admin of the group/channel.",
+                "Ошибка! Вы должны добавить этого бота в качестве администратора группы/канала.",
             ))
             .await;
         if res.is_err() {
@@ -187,8 +187,8 @@ pub async fn try_register(ctx: &Context, chat_id: i64, registered_by: i64) -> bo
             .api
             .send_message(SendMessage::new(
                 registered_by,
-                "The bot must be admin of the channel/group, and shall be able to:\n\n\
-                1. manage the chat.\n2. post messages\n3. pin messages",
+                "Бот должен быть администратором канала/группы и иметь возможность:\n\n\
+                 1. управлять чатом;\n2. отправлять сообщения;\n3. закреплять сообщения.",
             ))
             .await;
         if res.is_err() {
@@ -231,7 +231,7 @@ pub async fn try_register(ctx: &Context, chat_id: i64, registered_by: i64) -> bo
         .api
         .send_message(SendMessage::new(
             registered_by,
-            &format!("Channel/Group {} registered succesfully!", title),
+            &format!("Канал/группа {} успешно зарегистрированы!", title),
         ))
         .await;
 

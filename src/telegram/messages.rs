@@ -32,11 +32,11 @@ use crate::persistence::types::Channel;
 /// Panics if Telegram returns a error.
 pub async fn display_main_commands(ctx: &Context, chat_id: i64) {
     let text = escape_markdown(
-        "What do you want to do?\n\
-        /register - Register a channel/group to the bot\n\
-        /list - List your registered groups/channels\n\
-        /contest - Start/Manage the referral contest\n\
-        /rank - Your rank in the challenges you joined\n",
+        "Что вы хотите сделать?\n\
+        /register - Регистрация канала/группы в боте\n\
+        /list - Список зарегистрированных групп/каналов\n\
+        /contest - Запуск/управление конкурсом рефералов\n\
+        /rank - Ваш рейтинг в конкурсах, к которым вы присоединились\n",
         None,
     );
     let mut reply = SendMessage::new(chat_id, &text);
@@ -108,13 +108,13 @@ pub async fn delete_message(ctx: &Context, chat_id: i64, message_id: i64) {
 pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
     let mut reply = SendMessage::new(
         chat_id,
-        &escape_markdown(&format!("{}\n\nWhat do you want to do?", chan.name), None),
+        &escape_markdown(&format!("{}\n\nЧто вы хотите сделать?", chan.name), None),
     );
     reply.set_parse_mode(&ParseMode::MarkdownV2);
     let inline_keyboard = vec![
         vec![
             InlineKeyboardButton {
-                text: "\u{270d}\u{fe0f} Create".to_owned(),
+                text: "\u{270d}\u{fe0f} Создать".to_owned(),
                 // start, chan
                 callback_data: Some(format!("create {}", chan.id)),
                 callback_game: None,
@@ -125,7 +125,7 @@ pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
                 url: None,
             },
             InlineKeyboardButton {
-                text: "\u{274c} Delete".to_owned(),
+                text: "\u{274c} Удалить".to_owned(),
                 callback_data: Some(format!("delete {}", chan.id)),
                 callback_game: None,
                 login_url: None,
@@ -137,7 +137,7 @@ pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
         ],
         vec![
             InlineKeyboardButton {
-                text: "\u{25b6}\u{fe0f} Start".to_owned(),
+                text: "\u{25b6}\u{fe0f} Начать".to_owned(),
                 // start, chan
                 callback_data: Some(format!("start {}", chan.id)),
                 callback_game: None,
@@ -148,7 +148,7 @@ pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
                 url: None,
             },
             InlineKeyboardButton {
-                text: "\u{23f9} Stop".to_owned(),
+                text: "\u{23f9} Остановить".to_owned(),
                 callback_data: Some(format!("stop {}", chan.id)),
                 callback_game: None,
                 login_url: None,
@@ -160,7 +160,7 @@ pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
         ],
         vec![
             InlineKeyboardButton {
-                text: "\u{1f4c4}List".to_owned(),
+                text: "\u{1f4c4}Список".to_owned(),
                 callback_data: Some(format!("list {}", chan.id)),
                 callback_game: None,
                 login_url: None,
@@ -170,7 +170,7 @@ pub async fn display_manage_menu(ctx: &Context, chat_id: i64, chan: &Channel) {
                 url: None,
             },
             InlineKeyboardButton {
-                text: "\u{1f519}Menu".to_owned(),
+                text: "\u{1f519}Меню".to_owned(),
                 callback_data: Some(format!("main {}", chan.id)),
                 callback_game: None,
                 login_url: None,

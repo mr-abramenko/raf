@@ -41,7 +41,7 @@ use crate::{
 ///
 /// # Panics
 /// Panics if the connection to the db fails, or if telegram servers return error.
-#[command(description = "Your rank in the challenges you joined")]
+#[command(description = "Ваш рейтинг в конкурсах, к которым вы присоединились")]
 pub async fn rank(ctx: Context, message: Message) -> CommandResult {
     info!("rank command begin");
     let sender_id = message.from.clone().unwrap().id;
@@ -75,13 +75,13 @@ pub async fn rank(ctx: Context, message: Message) -> CommandResult {
     };
 
     let text = if rank_per_user_contest.is_empty() {
-        "You haven't partecipated in any contest yet!".to_string()
+        "Вы еще не участвовали ни в одном конкурсе!".to_string()
     } else {
-        let mut m = "Your rankings\n\n".to_string();
+        let mut m = "Ваш рейтинг\n\n".to_string();
         for rank_contest in rank_per_user_contest {
             let c = rank_contest.c;
             let rank = rank_contest.rank;
-            m += &format!("Contest \"{}({})\": ", c.name, c.end);
+            m += &format!("Конкурс \"{}({})\": ", c.name, c.end);
             if rank == 1 {
                 m += "\u{1f947}#1!";
             } else if rank <= 3 {
@@ -111,19 +111,19 @@ pub async fn rank(ctx: Context, message: Message) -> CommandResult {
 /// # Arguments
 /// * `ctx` - Telexide context
 /// * `message` - Received message with the command inside
-#[command(description = "Help menu")]
+#[command(description = "Меню справки")]
 pub async fn help(ctx: Context, message: Message) -> CommandResult {
     info!("help command begin");
     let sender_id = message.from.clone().unwrap().id;
     let text = escape_markdown(
-        "I can create contests based on the referral strategy. \
-        The user that referes more (legit) users will win a prize!\n\n\
-        You can control me by sending these commands:\n\n\
-        /register - Register a channel/group to the bot\n\
-        /list - List your registered groups/channels\n\
-        /contest - Start/Manage the referral contest\n\
-        /rank - Your rank in the challenges you joined\n\
-        /help - This menu",
+        "Я могу создавать конкурсы на основе реферальной стратегии. \
+        Пользователь, который привлечет больше (законных) пользователей, выиграет приз!\n\n\
+        Вы можете управлять мной, отправив следующие команды:\n\n\
+        /register - Зарегистрировать канал/группу в боте;\n\
+        /list - Список зарегистрированных групп/каналов;\n\
+        /contest - Запуск/управление конкурсом рефералов;\n\
+        /rank - Ваш ранг в испытаниях, к которым вы присоединились;\n\
+        /help -Это меню.",
         None,
     );
     let mut reply = SendMessage::new(sender_id, &text);
@@ -145,14 +145,14 @@ pub async fn help(ctx: Context, message: Message) -> CommandResult {
 ///
 /// # Panics
 /// Panics if the connection to the db fails, or if telegram servers return error.
-#[command(description = "Start/Manage the referral contest")]
+#[command(description = "Начать/управлять конкурсом рефералов")]
 pub async fn contest(ctx: Context, message: Message) -> CommandResult {
     info!("contest command begin");
     let sender_id = message.from.clone().unwrap().id;
     let channels = channels::get_all(&ctx, sender_id);
 
     if channels.is_empty() {
-        let reply = SendMessage::new(sender_id, "You have no registered groups/channels!");
+        let reply = SendMessage::new(sender_id, "У вас нет зарегистрированных групп/каналов!");
         let res = ctx.api.send_message(reply).await;
         if res.is_err() {
             let err = res.err().unwrap();
@@ -160,7 +160,7 @@ pub async fn contest(ctx: Context, message: Message) -> CommandResult {
         }
         display_main_commands(&ctx, sender_id).await;
     } else {
-        let mut reply = SendMessage::new(sender_id, "Select the group/channel you want to manage");
+        let mut reply = SendMessage::new(sender_id, "Выберите группу/канал, которым хотите управлять");
 
         let mut partition_size: usize = channels.len() / 2;
         if partition_size < 2 {
@@ -216,7 +216,7 @@ pub async fn contest(ctx: Context, message: Message) -> CommandResult {
 ///
 /// # Panics
 /// Panics if the connection to the db fails, or if telegram servers return error.
-#[command(description = "Start the Bot")]
+#[command(description = "Запустить бота")]
 pub async fn start(ctx: Context, message: Message) -> CommandResult {
     info!("start command begin");
     let sender_id = message.from.clone().unwrap().id;
@@ -309,8 +309,8 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
             ctx.api
                 .send_message(SendMessage::new(
                     sender_id,
-                    "Something wrong with the group/channel or the user that's inviting you.\n\
-                    Contact the support.",
+                    "Что-то не так с группой/каналом или пользователем, который вас приглашает.\n\
+                    Обратитесь в службу поддержки.",
                 ))
                 .await?;
             return Err(CommandError(
@@ -406,8 +406,8 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
 
             let text = &escape_markdown(
                 &format!(
-                    "Thank you for joining the {contest_name} contest!\n\
-            Here's the link to use for inviting your friends to join {chan_name}:\n\n\
+                    "Благодарим вас за участие в конкурсе {contest_name}!\n\
+            Вот ссылка, по которой можно пригласить друзей присоединиться к {chan_name}:\n\n\
             \u{1f449}\u{1f3fb}{invite_link}",
                     contest_name = c.name,
                     chan_name = chan.name,
@@ -433,7 +433,7 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
                 .api
                 .send_message(SendMessage::new(
                     sender_id,
-                    "Welcome to RaF (Refer a Friend) Bot! Have a look at the command list, with /help",
+                    "Добро пожаловать в бота! Для просмотра списка возможных команд используйте /help",
                 ))
                 .await?;
         }
@@ -451,20 +451,20 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
 ///
 /// # Panics
 /// If telegram servers return error.
-#[command(description = "Register your group/channel to the bot")]
+#[command(description = "Зарегистрируйте свою группу/канал в боте")]
 pub async fn register(ctx: Context, message: Message) -> CommandResult {
     info!("register command begin");
     let sender_id = message.from.clone().unwrap().id;
     ctx.api
         .send_message(SendMessage::new(
             sender_id,
-            "To register a channel to RaF\n\n\
-            1) Add the bot as admin in your channel\n\
-            2) Forward a message from your channel to complete the registartion\n\n\
-            To register a group/supergroup to RaF:\n\n\
-            1) Add the bot as admin in your group/supergroup\n\
-            2) Start the bot inside the group/supergroup\n\n\
-            That's it.",
+            "Чтобы зарегистрировать канал:\n\n\
+            1) Добавьте бота в качестве администратора на свой канал\n\
+            2) Перешлите сообщение со своего канала боту для завершения регистрации\n\n\
+            Чтобы зарегистрировать группу/супергруппу:\n\n\
+            1) Добавьте бота в качестве администратора в вашу группу/супергруппу\n\
+            2) Запустите бота внутри группы/супергруппы\n\n\
+            Вот и все.",
         ))
         .await?;
     display_main_commands(&ctx, sender_id).await;
@@ -480,7 +480,7 @@ pub async fn register(ctx: Context, message: Message) -> CommandResult {
 ///
 /// # Panics
 /// Panics if the connection to the db fails, or if telegram servers return error.
-#[command(description = "List your registered channels/groups")]
+#[command(description = "Список зарегистрированных каналов/групп")]
 pub async fn list(ctx: Context, message: Message) -> CommandResult {
     info!("list command begin");
     let sender_id = message.from.clone().unwrap().id;
@@ -497,7 +497,7 @@ pub async fn list(ctx: Context, message: Message) -> CommandResult {
             );
         }
         if text.is_empty() {
-            escape_markdown("You don't have any channel registered, yet!", None)
+            escape_markdown("У вас пока нет ни одного зарегистрированного канала!", None)
         } else {
             text
         }

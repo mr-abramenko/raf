@@ -82,7 +82,7 @@ pub async fn callback(ctx: Context, update: Update) {
         accepted = true;
     } else if data.contains('❌') {
         // Rejected invitation
-        let text = Some("Ok, doing nothing.".to_string());
+        let text = Some("Ничего не делать.".to_string());
         let res = ctx
             .api
             .answer_callback_query(AnswerCallbackQuery {
@@ -239,7 +239,7 @@ pub async fn callback(ctx: Context, update: Update) {
             Ok(m) => {
                 if member_joined(m) {
                     let text = format!(
-                        "You are already a member of [{}]({})\\.",
+                        "Вы уже являетесь участником [{}]({})\\.",
                         escape_markdown(&chan.name.to_string(), None),
                         chan.link
                     );
@@ -282,7 +282,7 @@ pub async fn callback(ctx: Context, update: Update) {
             error!("[callback handler] {}", res.err().unwrap());
         }
         let text = format!(
-            "Please join \u{1f449} [{}]({}) within the next 10 seconds\\.",
+            "Пожалуйста, присоединитесь к \u{1f449} [{}]({}) в течение следующих 10 секунд\\.",
             escape_markdown(&chan.name.to_string(), None),
             chan.link
         );
@@ -314,7 +314,7 @@ pub async fn callback(ctx: Context, update: Update) {
                     .api
                     .send_message(SendMessage::new(
                         sender_id,
-                        "You joined the channel but the contest does not exist.",
+                        "Вы присоединились к каналу, но конкурса не существует.",
                     ))
                     .await;
                 if res.is_err() {
@@ -330,7 +330,7 @@ pub async fn callback(ctx: Context, update: Update) {
                         .api
                         .send_message(SendMessage::new(
                             sender_id,
-                            "You joined the group/channel but the contest is finished",
+                            "Вы присоединились к группе/каналу, но конкурс завершен.",
                         ))
                         .await;
                     if res.is_err() {
@@ -354,7 +354,7 @@ pub async fn callback(ctx: Context, update: Update) {
                             .api
                             .send_message(SendMessage::new(
                                 sender_id,
-                                "Failed to insert invitation: this invitation might already exist!",
+                                "Не удалось вставить приглашение: возможно, это приглашение уже существует!",
                             ))
                             .await;
                         if res.is_err() {
@@ -363,7 +363,7 @@ pub async fn callback(ctx: Context, update: Update) {
                         }
                     } else {
                         let text = format!(
-                            "You joined [{}]({}) \u{1f917}",
+                            "Вы присоединились [{}]({}) \u{1f917}",
                             escape_markdown(&chan.name.to_string(), None),
                             chan.link
                         );
@@ -379,7 +379,7 @@ pub async fn callback(ctx: Context, update: Update) {
             }
         } else {
             info!("User not joined the channel after 10 seconds...");
-            let text = escape_markdown("You haven't joined the channel within 10 seconds :(", None);
+            let text = escape_markdown("Вы не присоединились к каналу в течение 10 секунд :(", None);
             let mut reply = SendMessage::new(sender_id, &text);
             reply.set_parse_mode(&ParseMode::MarkdownV2);
             let res = ctx.api.send_message(reply).await;
@@ -403,11 +403,11 @@ pub async fn callback(ctx: Context, update: Update) {
             .filter(|c| c.started_at.is_none())
             .collect::<Vec<Contest>>();
         if contests.is_empty() {
-            remove_loading_icon(&ctx, &callback.id, Some("You have no contests to start!")).await;
+            remove_loading_icon(&ctx, &callback.id, Some("У вас нет конкурсов для запуска!")).await;
         } else {
             let mut reply = SendMessage::new(
                 sender_id,
-                &escape_markdown("Select the contest to start", None),
+                &escape_markdown("Выберите конкурс, чтобы его запустить", None),
             );
             let mut partition_size: usize = contests.len() / 2;
             if partition_size < 2 {
@@ -456,11 +456,11 @@ pub async fn callback(ctx: Context, update: Update) {
             .filter(|c| c.started_at.is_some() && !c.stopped)
             .collect::<Vec<Contest>>();
         if contests.is_empty() {
-            remove_loading_icon(&ctx, &callback.id, Some("You have no contests to stop!")).await;
+            remove_loading_icon(&ctx, &callback.id, Some("У вас нет конкурсов для завершения!")).await;
         } else {
             let mut reply = SendMessage::new(
                 chat_id,
-                &escape_markdown("Select the contest to stop", None),
+                &escape_markdown("Выберите конкурс, чтобы его завершить", None),
             );
             let mut partition_size: usize = contests.len() / 2;
             if partition_size < 2 {
@@ -504,7 +504,7 @@ pub async fn callback(ctx: Context, update: Update) {
         // Clean up ranks from users that joined and then left the channel
         let c = contests::get(&ctx, contest_id).unwrap();
         if c.stopped {
-            let reply = SendMessage::new(chat_id, "Contest already stopped. Doing nothing.");
+            let reply = SendMessage::new(chat_id, "Конкурс уже завершен.");
             let res = ctx.api.send_message(reply).await;
             if res.is_err() {
                 let err = res.err().unwrap();
@@ -543,7 +543,7 @@ pub async fn callback(ctx: Context, update: Update) {
                 // No one partecipated in the challenge
                 let reply = SendMessage::new(
                     sender_id,
-                    "No one partecipated to the challenge. Doing nothing.",
+                    "Никто не принял участие в конкурсе.",
                 );
                 let res = ctx.api.send_message(reply).await;
                 if res.is_err() {
@@ -554,7 +554,7 @@ pub async fn callback(ctx: Context, update: Update) {
                 delete_message(&ctx, chat_id, parent_message).await;
             } else {
                 // Send top-10 to the channel and pin the message
-                let mut m = format!("\u{1f3c6} Contest ({}) finished \u{1f3c6}\n\n\n", c.name);
+                let mut m = format!("\u{1f3c6} Конкурс ({}) завершен \u{1f3c6}\n\n\n", c.name);
                 let winner = rank[0].user.clone();
                 for row in rank {
                     let user = row.user;
@@ -583,7 +583,7 @@ pub async fn callback(ctx: Context, update: Update) {
                     );
                 }
                 m += &format!(
-                    "\n\nThe prize ({}) is being delivered to our champion \u{1f947}. Congratulations!!",
+                    "\n\nПриз ({}) доставляется нашему победителю \u{1f947}. Поздравляем!!",
                     c.prize
                 );
 
@@ -621,14 +621,14 @@ pub async fn callback(ctx: Context, update: Update) {
                 let text = if direct_communication {
                     let username = winner.username.unwrap();
                     format!(
-                        "The winner usename is @{}. Get in touch and send the prize!",
+                        "Имя пользователя-победителя @{}. Свяжитесь с ним и отправьте приз!",
                         username
                     )
                 } else {
-                    "The winner has no username. It means you can communicate only through the bot.\n\n\
-                Write NOW a message that will be delivered to the winner (if you can, just send the prize!).\n\n
-                NOTE: You can only send up to one message, hence a good idea is to share your username with the winner\
-                in order to make they start a commucation with you in private.".to_string()
+                    "У победителя нет имени пользователя. Это означает, что вы можете общаться только через бота.\n\n\
+                    Напишите СЕЙЧАС сообщение, которое будет доставлено победителю (если можете, просто отправьте приз!).\n\n
+                    ПРИМЕЧАНИЕ. Вы можете отправить только одно сообщение, поэтому хорошей идеей будет поделиться своим именем пользователя с победителем\
+                    и предложить начать общение в личной переписке.".to_string()
                 };
                 let mut reply = SendMessage::new(sender_id, &escape_markdown(&text, None));
                 reply.set_parse_mode(&ParseMode::MarkdownV2);
@@ -669,14 +669,14 @@ pub async fn callback(ctx: Context, update: Update) {
             sender_id,
             &escape_markdown(
                 &format!(
-                    "Write a single message with every required info on a new line\n\n\
-                Contest name\n\
-                End date (YYYY-MM-DD hh:mm TZ)\n\
-                Prize\n\n\
-                For example a valid message is (note the GMT+1 timezone written as +01):\n\n\
+                    "Напишите одно сообщение с необходимой информацией в каждой строке\n\n\
+                Название конкурса\n\
+                Дата окончания (ГГГГ-ММ-ДД чч:мм TZ)\n\
+                Приз\n\n\
+                Например, допустимое сообщение (обратите внимание на часовой пояс GMT+1, записанный как +01):\n\n\
                 {month_string} {year}\n\
                 {year}-{month}-28 20:00 +01\n\
-                Amazon 50\u{20ac} Gift Card\n",
+                Подарочная карта Amazon 50\u{20ac}\n",
                     year = now.format("%Y"),
                     month = now.format("%m"),
                     month_string = now.format("%B")
@@ -716,11 +716,11 @@ pub async fn callback(ctx: Context, update: Update) {
     if delete {
         let contests = contests::get_all(&ctx, chan.id);
         if contests.is_empty() {
-            remove_loading_icon(&ctx, &callback.id, Some("You have no contests to delete!")).await;
+            remove_loading_icon(&ctx, &callback.id, Some("У вас нет конкурсов для удаления!")).await;
         } else {
             let mut reply = SendMessage::new(
                 sender_id,
-                &escape_markdown("Select the contest to delete", None),
+                &escape_markdown("Выберите конкурс для удаления", None),
             );
             let mut partition_size: usize = contests.len() / 2;
             if partition_size < 2 {
@@ -772,12 +772,12 @@ pub async fn callback(ctx: Context, update: Update) {
                 let mut table = Table::new("{:<} | {:<} | {:<} | {:<} | {:<} | {:<}");
                 table.add_row(
                     Row::new()
-                        .with_cell("Name")
-                        .with_cell("End")
-                        .with_cell("Prize")
-                        .with_cell("Started")
-                        .with_cell("Stopped")
-                        .with_cell("Users"),
+                        .with_cell("Имя")
+                        .with_cell("Окончание")
+                        .with_cell("Приз")
+                        .with_cell("Начало")
+                        .with_cell("Остановлен")
+                        .with_cell("Участники"),
                 );
                 for (_, contest) in contests.iter().enumerate() {
                     let users = contests::count_users(&ctx, contest);
@@ -802,7 +802,7 @@ pub async fn callback(ctx: Context, update: Update) {
                     "{}```\n\n{}",
                     table,
                     escape_markdown(
-                        "Dates are all converted to UTC timezone.\nBetter view on desktop.",
+                        "Все даты конвертируются в часовой пояс UTC.\n Таблица нормально отображается на ПК.",
                         None
                     )
                 );
@@ -814,7 +814,7 @@ pub async fn callback(ctx: Context, update: Update) {
             remove_loading_icon(
                 &ctx,
                 &callback.id,
-                Some("You don't have any active or past contests for this group/channel!"),
+                Some("У вас нет активных или завершенных конкурсов для этой группы/канала!"),
             )
             .await;
         } else {
@@ -845,7 +845,7 @@ pub async fn callback(ctx: Context, update: Update) {
         let text = if res.is_err() {
             let err = res.unwrap_err();
             error!("[delete from contests] {}", err);
-            format!("Error: {}. You can't stop a contest with already some partecipant, this is unfair!", err)
+            format!("Ошибка: {}. Нельзя останавливать конкурс, в котором уже есть какой-то участник, это несправедливо!", err)
         } else {
             "Done!".to_string()
         };
@@ -867,7 +867,7 @@ pub async fn callback(ctx: Context, update: Update) {
         // if contest_id is not valid, this panics (that's ok, the user is doing nasty things)
         let c = contests::get(&ctx, contest_id).unwrap();
         if c.started_at.is_some() {
-            let text = "You can't start an already started contest.";
+            let text = "Вы не можете начать уже начатый конкурс.";
             let res = ctx
                 .api
                 .send_message(SendMessage::new(sender_id, text))
@@ -903,7 +903,7 @@ pub async fn callback(ctx: Context, update: Update) {
                 error!("[update/start contest] {}", err);
                 err.to_string()
             } else {
-                "Contest started!".to_string()
+                "Конкурс начался!".to_string()
             };
             let res = ctx
                 .api
@@ -933,7 +933,7 @@ pub async fn callback(ctx: Context, update: Update) {
                     "{title}\n\n{rules}\n\n{bot_link}",
                     title = escape_markdown(
                         &format!(
-                            "\u{1f525}{name} contest \u{1f525}\nWho invites more friends wins a {prize}!",
+                            "\u{1f525}{name} конкурс \u{1f525}\nКто пригласит больше друзей, получит {prize}!",
                             prize = c.prize,
                             name = c.name
                         ),
@@ -943,18 +943,18 @@ pub async fn callback(ctx: Context, update: Update) {
                         "{} **{prize}**\n{disclaimer}",
                         escape_markdown(
                             &format!(
-                                "1. Start the contest bot using the link below\n\
-                            2. The bot gives you a link\n\
-                            3. Share the link with your friends!\n\n\
-                            At the end of the contest ({end_date}) the user that referred more friends \
-                            will win a ",
+                                "1. Запустите конкурсного бота по ссылке ниже\n\
+                             2. Бот дает ссылку\n\
+                             3. Поделитесь ссылкой с друзьями!\n\n\
+                             В конце конкурса ({end_date}) пользователь, который пригласил больше друзей \
+                             выиграет",
                                 end_date = c.end
                             ),
                             None
                         ),
                         prize = escape_markdown(&c.prize, None),
                         disclaimer =
-                            escape_markdown("You can check your rank with the /rank command", None),
+                            escape_markdown("Вы можете посмотреть свой рейтинг с помощью команды /rank", None),
                     ),
                     bot_link = escape_markdown(
                         &format!(
@@ -1080,7 +1080,7 @@ pub async fn message(ctx: Context, update: Update) {
                 for command in commands {
                     if text.starts_with(&format!("/{}@{}", command, bot_name)) {
                         let chat_id = message.chat.get_id();
-                        let text =  format!("All the commands, except for /start are disabled in groups. /start is enabled only for the group owner.\n\nTo use them, start @{}", bot_name);
+                        let text =  format!("Все команды, кроме /start, не работают в группах. Коменда /start включена только для владельца группы.\n\nЧтобы использовать их, запустите @{}", bot_name);
                         let res = ctx.api.send_message(SendMessage::new(chat_id, &text)).await;
 
                         if res.is_err() {
@@ -1164,9 +1164,9 @@ pub async fn message(ctx: Context, update: Update) {
                     let text = if res.is_err() {
                         let err = res.err().unwrap();
                         error!("[insert contest] {}", err);
-                        format!("Error: {}", err)
+                        format!("Ошибка: {}", err)
                     } else {
-                        format!("Contest {} created succesfully!", contest.name)
+                        format!("Конкурс {} успешно создан!", contest.name)
                     };
                     let res = ctx
                         .api
@@ -1184,9 +1184,9 @@ pub async fn message(ctx: Context, update: Update) {
                         .send_message(SendMessage::new(
                             sender_id,
                             &format!(
-                                "Something wrong happened while creating your new contest.\n\n\
-                            Error: {}\n\n\
-                            Please restart the contest creating process and send a correct message",
+                                "При создании нового конкурса произошла ошибка.\n\n\
+                                Ошибка: {}\n\n\
+                                Пожалуйста, перезапустите процесс создания конкурса и отправьте правильное сообщение.",
                                 err
                             ),
                         ))
@@ -1248,7 +1248,7 @@ pub async fn message(ctx: Context, update: Update) {
                     let err = res.err().unwrap();
                     error!("[winner communication] {}", err);
                 } else {
-                    let reply = SendMessage::new(sender_id, "Message delivered to the winner!");
+                    let reply = SendMessage::new(sender_id, "Сообщение доставлено победителю!");
                     let res = ctx.api.send_message(reply).await;
                     if res.is_err() {
                         let err = res.err().unwrap();
