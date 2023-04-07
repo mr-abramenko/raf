@@ -82,7 +82,7 @@ pub async fn callback(ctx: Context, update: Update) {
         accepted = true;
     } else if data.contains('❌') {
         // Rejected invitation
-        let text = Some("Ничего не делать.".to_string());
+        let text = Some("Нет так нет.".to_string());
         let res = ctx
             .api
             .answer_callback_query(AnswerCallbackQuery {
@@ -669,14 +669,14 @@ pub async fn callback(ctx: Context, update: Update) {
             sender_id,
             &escape_markdown(
                 &format!(
-                    "Напишите одно сообщение с необходимой информацией в каждой строке\n\n\
+                    "Напишите одно сообщение с необходимой информацией в каждой строке.\n\n\
                 Название конкурса\n\
                 Дата окончания (ГГГГ-ММ-ДД чч:мм TZ)\n\
                 Приз\n\n\
                 Например, допустимое сообщение (обратите внимание на часовой пояс GMT+1, записанный как +01):\n\n\
                 {month_string} {year}\n\
                 {year}-{month}-28 20:00 +01\n\
-                Подарочная карта Amazon 50\u{20ac}\n",
+                Подарочная карта\n",
                     year = now.format("%Y"),
                     month = now.format("%m"),
                     month_string = now.format("%B")
@@ -933,18 +933,18 @@ pub async fn callback(ctx: Context, update: Update) {
                     "{title}\n\n{rules}\n\n{bot_link}",
                     title = escape_markdown(
                         &format!(
-                            "\u{1f525}{name} конкурс \u{1f525}\nКто пригласит больше друзей, получит {prize}!",
+                            "\u{1f525}{name}\u{1f525}\nКто пригласит больше друзей, получит {prize}!",
                             prize = c.prize,
                             name = c.name
                         ),
                         None
                     ),
                     rules = format!(
-                        "{} **{prize}**\n{disclaimer}",
+                        "{} **{prize}**\n{disclaimer}\n",
                         escape_markdown(
                             &format!(
-                                "1. Запустите конкурсного бота по ссылке ниже\n\
-                             2. Бот дает ссылку\n\
+                                "1. Запустите конкурсного бота по ссылке ниже.\n\
+                             2. Бот сгенерирует вашу уникальную ссылку.\n\
                              3. Поделитесь ссылкой с друзьями!\n\n\
                              В конце конкурса ({end_date}) пользователь, который пригласил больше друзей \
                              выиграет",

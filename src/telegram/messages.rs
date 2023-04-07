@@ -33,10 +33,10 @@ use crate::persistence::types::Channel;
 pub async fn display_main_commands(ctx: &Context, chat_id: i64) {
     let text = escape_markdown(
         "Что вы хотите сделать?\n\
-        /register - Регистрация канала/группы в боте\n\
-        /list - Список зарегистрированных групп/каналов\n\
-        /contest - Запуск/управление конкурсом рефералов\n\
-        /rank - Ваш рейтинг в конкурсах, к которым вы присоединились\n",
+        /register - Регистрация канала/группы в боте.\n\
+        /list - Список зарегистрированных групп/каналов.\n\
+        /contest - Запуск/управление конкурсом рефералов.\n\
+        /rank - Ваш рейтинг в конкурсах, к которым вы присоединились.\n",
         None,
     );
     let mut reply = SendMessage::new(chat_id, &text);

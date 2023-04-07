@@ -326,7 +326,7 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
                 sender_id,
                 &escape_markdown(
                     &format!(
-                        "{}{}{} invited you to join {}",
+                        "{}{}{} приглашает вас присоединиться к {}",
                         user.first_name,
                         match user.last_name {
                             Some(last_name) => format!(" {}", last_name),
@@ -344,7 +344,7 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
 
             let inline_keyboard = vec![vec![
                 InlineKeyboardButton {
-                    text: "Accept \u{2705}".to_owned(),
+                    text: "Принять \u{2705}".to_owned(),
                     // tick, source, dest, chan
                     callback_data: Some(format!(
                         "\u{2705} {} {} {} {}",
@@ -361,7 +361,7 @@ pub async fn start(ctx: Context, message: Message) -> CommandResult {
                     url: None,
                 },
                 InlineKeyboardButton {
-                    text: "Refuse \u{274c}".to_owned(),
+                    text: "Отклонить \u{274c}".to_owned(),
                     callback_data: Some("\u{274c}".to_string()),
                     callback_game: None,
                     login_url: None,
@@ -459,11 +459,11 @@ pub async fn register(ctx: Context, message: Message) -> CommandResult {
         .send_message(SendMessage::new(
             sender_id,
             "Чтобы зарегистрировать канал:\n\n\
-            1) Добавьте бота в качестве администратора на свой канал\n\
-            2) Перешлите сообщение со своего канала боту для завершения регистрации\n\n\
+            1) Добавьте бота в качестве администратора на свой канал.\n\
+            2) Перешлите сообщение со своего канала боту для завершения регистрации.\n\n\
             Чтобы зарегистрировать группу/супергруппу:\n\n\
-            1) Добавьте бота в качестве администратора в вашу группу/супергруппу\n\
-            2) Запустите бота внутри группы/супергруппы\n\n\
+            1) Добавьте бота в качестве администратора в вашу группу/супергруппу.\n\
+            2) Запустите бота внутри группы/супергруппы.\n\n\
             Вот и все.",
         ))
         .await?;
